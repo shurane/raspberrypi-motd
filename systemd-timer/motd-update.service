@@ -3,4 +3,4 @@ Description=Motd upgradable package count service
 After=network.target
 
 [Service]
-ExecStart=run-parts /etc/update-motd-static.d
+ExecStart=/bin/bash -c "bkt --ttl 1d --force -- sudo apt-get update --quiet=2 && bkt --ttl 1d --force -- sudo apt-get -s dist-upgrade"
