@@ -1,0 +1,28 @@
+#!/bin/bash
+
+function color (){
+  echo "\e[$1m$2\e[0m"
+}
+
+msgColor="38;5;103"
+countColor="38;5;16;48;5;242"
+plurality="packages"
+
+# Count
+bkt --ttl 1d -- sudo apt-get update --quiet=2
+pkgCount="$(bkt --ttl 1d -- sudo apt-get -s dist-upgrade | grep -Po '^\d+(?= upgraded)')"
+
+if (( $pkgCount > 0 )); then
+  countColor="38;5;16;48;5;71"
+fi
+if (( $pkgCount == 1 )); then
+    plurality="package"
+fi
+
+# Message
+msgHeader=$(color $msgColor \*)
+msgCount=$(color $countColor " $pkgCount ")
+msgLabel=$(color $msgColor "$plurality can be upgraded")
+
+echo -e "\n$msgHeader $msgCount $msgLabel\n"
+
